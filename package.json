@@ -1,0 +1,25 @@
+{
+  "name": "copilot-poc",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "dev": "tsx --watch src/index.ts"
+  },
+  "keywords": [],
+  "description": "",
+  "dependencies": {
+    "@copilot-extensions/preview-sdk": "^5.0.1",
+    "axios": "^1.7.8",
+    "express": "^4.21.1",
+    "octokit": "^4.0.2",
+    "openai": "^4.73.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
