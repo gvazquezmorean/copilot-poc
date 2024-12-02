@@ -3,16 +3,16 @@ import OpenAI from "openai";
 import { RunnerResponse, Tool } from "../functions";
 import axios from "axios";
 
-export class listComponents extends Tool {
+export class listViolations extends Tool {
   static definition = {
-    name: "list_components",
+    name: "list_violations",
     description:
-      "This function lists components based of a scan-id.",
+      "This function lists violations based of a scan-id.",
     parameters: {
       type: "object",
       properties: {},
       description:
-        "This function does not require any input parameters. It simply returns a list of components.",
+        "This function does not require any input parameters. It simply returns a list of violations.",
     },
   };
 
@@ -31,47 +31,21 @@ export class listComponents extends Tool {
       auth: { username: 'admin', password: "admin123." }
     });
 
-    console.log(report.data);
     const reportDataUrl = report.data[0].reportDataUrl;
-
-    console.log("Report Data URL: ", reportDataUrl);
 
     const reportData = await axios.get(`http://localhost:8070/${reportDataUrl}`, {
       auth: { username: 'admin', password: "admin123." }
     });
 
-    // console.log("Report Data: ", reportData.data);
+    const components = reportData.data.components;
 
-
-    // const components = [ {  
-    //   "displayName": "o1-mini",
-    //   "version": "1.0",
-    //   "publisher": "openai",
-    //   "registryName": "azure-openai",
-    //   "license": "MIT",
-    //   "inferenceTasks": ["code generation", "small context operations"],
-    //   "summary": "Smaller, faster, and 80% cheaper than o1-preview, performs well at code generation and small context operations."
-    // }, {
-    //   "displayName": "o1-preview",
-    //   "version": "1.0",
-    //   "publisher": "openai",
-    //   "registryName": "azure-openai",
-    //   "license": "MIT",
-    //   "inferenceTasks": ["advanced reasoning", "solving complex problems"],
-    //   "summary": "Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require deep contextual understanding and agentic workflows."
-    // }];
-
-    const components = reportData.data.components//.map((component) => ({
-    //   displayName: component.displayName,
-    //   version: component.version,
-    //   publisher: component.publisher,
-    //   registryName: component.registryName,
-    //   license: component.license,
-    // }));
+    console.log(components);
 
     const systemMessage = [
       "The user is asking for a list of components with securityIssues.",
+      "If the component does not have any security issues, it will not be included in the list.",
       "Respond with a concise and readable list of the components, with a short description for each one.",
+      "Start by showing how many components where there and how many of them have security issues.",
       "Use markdown formatting to make each description more readable.",
       "Begin each component's description with a header consisting of the component's name",
       "emphasis the publisher of the component",
@@ -86,7 +60,7 @@ export class listComponents extends Tool {
     ];
 
     return {
-      component: "recommended_component",
+      component: "list_violations",
       messages: [
         { role: "system", content: systemMessage.join("\n") },
         ...messages,

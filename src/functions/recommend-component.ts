@@ -5,7 +5,7 @@ export class recommendComponent extends Tool {
   static definition = {
     name: "recommend_component",
     description:
-      "Determines and recommends the most appropriate component version based on the provided scan-id. This function uses the available list of models to make the recommendation.",
+      "Determines and recommends the most appropriate component version based on the provided component. This function uses the available list of models to make the recommendation.",
     parameters: {
       type: "object",
       properties: {},

@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { createServer, IncomingMessage } from "node:http";
 import { verifyAndParseRequest, transformPayloadForOpenAICompatibility } from "@copilot-extensions/preview-sdk";
-import { listComponents } from "./functions/list-components";
+import { listViolations } from "./functions/list-violations.js";
 import { recommendComponent } from "./functions/recommend-component";
 import { RunnerResponse } from "./functions.js";
 import { Octokit } from "octokit";
@@ -16,8 +16,6 @@ const server = createServer(async (request, response) => {
   }
 
   const body = await getBody(request);
-
-  console.log(body)
 
   let verifyAndParseRequestResult: Awaited<ReturnType<typeof verifyAndParseRequest>>;
   const apiKey = request.headers["x-github-token"] as string;
@@ -68,12 +66,10 @@ const server = createServer(async (request, response) => {
     }
   })
 
-  console.log(usernamesecretresponse.data)
+  console.log(usernamesecretresponse.data) // this does not show the secret value
 
   // List of functions that are available to be called
-  // const modelsAPI = new ModelsAPI(apiKey);
-
-  const functions = [listComponents, recommendComponent];
+  const functions = [listViolations, recommendComponent];
 
   // Use the Copilot API to determine which function to execute
   const capiClient = new OpenAI({
