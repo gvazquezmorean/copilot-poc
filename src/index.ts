@@ -5,6 +5,7 @@ import { listViolations } from "./functions/list-violations.js";
 import { recommendComponent } from "./functions/recommend-component";
 import { RunnerResponse } from "./functions.js";
 import { Octokit } from "octokit";
+import { explainIntegration } from "./functions/explain-integration.js";
 
 const server = createServer(async (request, response) => {
 
@@ -69,7 +70,7 @@ const server = createServer(async (request, response) => {
   console.log(usernamesecretresponse.data) // this does not show the secret value
 
   // List of functions that are available to be called
-  const functions = [listViolations, recommendComponent];
+  const functions = [listViolations, recommendComponent, explainIntegration];
 
   // Use the Copilot API to determine which function to execute
   const capiClient = new OpenAI({
@@ -172,7 +173,7 @@ const server = createServer(async (request, response) => {
 
     console.log("\t with args", args);
     const func = new funcClass();
-    functionCallRes = await func.execute(payload.messages);
+    functionCallRes = await func.execute(payload.messages, args);
   } catch (err) {
     console.error(err);
     response.statusCode = 500
